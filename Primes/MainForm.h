@@ -14,9 +14,11 @@ private:
 	System::Windows::Forms::Button^  btnTask3;
 	System::Windows::Forms::DataVisualization::Charting::Chart^  Graph;
 	System::ComponentModel::Container ^components;
-private: System::Windows::Forms::ProgressBar^  pbRun;
-
-				 Thread ^primesThread;
+	System::Windows::Forms::ProgressBar^  pbRun;
+	int n, count;
+	array<bool> ^a;
+	array<int> ^primes;
+	Thread ^primesThread;
 	Void Primes();
 	System::Void btnTask1_Click(System::Object^  sender, System::EventArgs^  e);
 	System::Void btnTask2_Click(System::Object^  sender, System::EventArgs^  e);
@@ -45,6 +47,7 @@ private: System::Windows::Forms::ProgressBar^  pbRun;
 			// 
 			// btnTask2
 			// 
+			this->btnTask2->Enabled = false;
 			this->btnTask2->Location = System::Drawing::Point(429, 511);
 			this->btnTask2->Name = L"btnTask2";
 			this->btnTask2->Size = System::Drawing::Size(89, 23);
@@ -55,6 +58,7 @@ private: System::Windows::Forms::ProgressBar^  pbRun;
 			// 
 			// btnTask3
 			// 
+			this->btnTask3->Enabled = false;
 			this->btnTask3->Location = System::Drawing::Point(524, 511);
 			this->btnTask3->Name = L"btnTask3";
 			this->btnTask3->Size = System::Drawing::Size(89, 23);
@@ -69,7 +73,6 @@ private: System::Windows::Forms::ProgressBar^  pbRun;
 			this->Graph->Name = L"Graph";
 			this->Graph->Size = System::Drawing::Size(985, 465);
 			this->Graph->TabIndex = 3;
-			this->Graph->Text = L"chart1";
 			// 
 			// pbRun
 			// 
