@@ -19,7 +19,9 @@ private:
 	array<bool> ^a;
 	array<int> ^primes;
 	Thread ^primesThread;
+	Thread ^sumThread;
 	Void Primes();
+	Void Sum();
 	System::Void btnTask1_Click(System::Object^  sender, System::EventArgs^  e);
 	System::Void btnTask2_Click(System::Object^  sender, System::EventArgs^  e);
 	System::Void btnTask3_Click(System::Object^  sender, System::EventArgs^  e);

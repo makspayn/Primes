@@ -1,11 +1,15 @@
 #include "MainForm.h"
 
+public ref struct sum {
+	int i, j, k;
+};
+
 MainForm::MainForm(void)
 {
 	InitializeComponent();
 	System::Windows::Forms::Control::CheckForIllegalCrossThreadCalls = false;
 	n = 180000000;
-	count = 10000000;
+	count = 10000;
 	a = gcnew array<bool>(n);
 	primes = gcnew array<int>(count);
 }
@@ -19,6 +23,10 @@ MainForm::~MainForm()
 		primesThread->Abort();
 		delete primesThread;
 	}
+	if (sumThread) {
+		sumThread->Abort();
+		delete sumThread;
+	}
 }
 
 Void MainForm::Primes()
@@ -30,13 +38,14 @@ Void MainForm::Primes()
 	for (int i = 0; i < n; i++) {
 		a[i] = true;
 	}
-	int k = 2;
+	a[0] = a[1] = false;
+	int k = 0, m = count / 100 + 1;
 	double start = 0.0, time = 0.0;
 	start = clock();
 	for (int i = 2; k < count; ++i) {
 		if (a[i]) {
 			k++;
-			if (k % (count / 100) == 0) {
+			if (k % m == 0) {
 				pbRun->Value++;
 			}
 			if (i * 1ll * i < n) {
@@ -59,9 +68,62 @@ Void MainForm::Primes()
 			str = (k + 1).ToString() + " : " + i.ToString();
 			writer->WriteLine(str);
 			k++;
-			if (k % (count / 100) == 0) {
+			if (k % m == 0) {
 				pbRun->Value++;
 			}
+		}
+	}
+	writer->Close();
+	output->Close();
+	pbRun->Value = 0;
+	btnTask1->Enabled = true;
+	btnTask2->Enabled = true;
+	btnTask3->Enabled = true;
+}
+
+Void MainForm::Sum()
+{
+	btnTask1->Enabled = false;
+	btnTask2->Enabled = false;
+	btnTask3->Enabled = false;
+	array<sum ^> ^temp = gcnew array<sum ^>(primes[primes->Length - 1] / 2 - 1);
+	int l = 0, m = temp->Length / 100 + 1;
+	pbRun->Value = 0;
+	double start = 0.0, time = 0.0;
+	start = clock();
+	for (int i = 4; i < primes[primes->Length - 1] + 1; i += 2) {
+		bool flag = false;
+		for (int j = 0; j < count; j++) {
+			for (int k = j; k < count; k++) {
+				if (primes[j] + primes[k] == i) {
+					flag = true;
+					temp[l] = gcnew sum;
+					temp[l]->i = i;
+					temp[l]->j = primes[j];
+					temp[l]->k = primes[k];
+					if (l % m == 0) {
+						pbRun->Value++;
+					}
+					l++;
+					break;
+				}
+			}
+			if (flag) {
+				break;
+			}
+		}
+	}
+	time = clock() - start;
+	MessageBox::Show("Время выполнения: " + time.ToString() + " мс");
+	pbRun->Value = 0;
+	FileStream ^output = gcnew FileStream("sum.txt", FileMode::Create);
+	StreamWriter ^writer = gcnew StreamWriter(output);
+	String ^str = "";
+	for (int i = 0; i < temp->Length; i++) {
+		str = temp[i]->i.ToString() + " = " + temp[i]->j.ToString() + " + " + temp[i]->k.ToString();
+		writer->WriteLine(str);
+		if (i % m == 0) {
+			pbRun->Value++;
 		}
 	}
 	writer->Close();
@@ -111,5 +173,9 @@ System::Void MainForm::btnTask2_Click(System::Object ^ sender, System::EventArgs
 
 System::Void MainForm::btnTask3_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	return System::Void();
+	if (sumThread) {
+		delete sumThread;
+	}
+	sumThread = gcnew Thread(gcnew ThreadStart(this, &MainForm::Sum));
+	sumThread->Start();
 }
