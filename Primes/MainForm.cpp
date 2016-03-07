@@ -9,7 +9,7 @@ MainForm::MainForm(void)
 	InitializeComponent();
 	System::Windows::Forms::Control::CheckForIllegalCrossThreadCalls = false;
 	n = 180000000;
-	count = 10000;
+	count = 10000000;
 	a = gcnew array<bool>(n);
 	primes = gcnew array<int>(count);
 }
@@ -92,23 +92,16 @@ Void MainForm::Sum()
 	double start = 0.0, time = 0.0;
 	start = clock();
 	for (int i = 4; i < primes[primes->Length - 1] + 1; i += 2) {
-		bool flag = false;
 		for (int j = 0; j < count; j++) {
-			for (int k = j; k < count; k++) {
-				if (primes[j] + primes[k] == i) {
-					flag = true;
-					temp[l] = gcnew sum;
-					temp[l]->i = i;
-					temp[l]->j = primes[j];
-					temp[l]->k = primes[k];
-					if (l % m == 0) {
-						pbRun->Value++;
-					}
-					l++;
-					break;
+			if (a[i - primes[j]]) {
+				temp[l] = gcnew sum;
+				temp[l]->i = i;
+				temp[l]->j = primes[j];
+				temp[l]->k = i - primes[j];
+				if (l % m == 0) {
+					pbRun->Value++;
 				}
-			}
-			if (flag) {
+				l++;
 				break;
 			}
 		}
