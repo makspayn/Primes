@@ -13,8 +13,8 @@ private:
 	System::Windows::Forms::Button^  btnTask2;
 	System::Windows::Forms::Button^  btnTask3;
 	System::Windows::Forms::DataVisualization::Charting::Chart^  Graph;
-	System::ComponentModel::Container ^components;
 	System::Windows::Forms::ProgressBar^  pbRun;
+	System::ComponentModel::Container ^components;
 	int n, count;
 	array<bool> ^a;
 	array<int> ^primes;

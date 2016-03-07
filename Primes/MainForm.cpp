@@ -1,9 +1,5 @@
 #include "MainForm.h"
 
-public ref struct sum {
-	int i, j, k;
-};
-
 MainForm::MainForm(void)
 {
 	InitializeComponent();
@@ -86,18 +82,18 @@ Void MainForm::Sum()
 	btnTask1->Enabled = false;
 	btnTask2->Enabled = false;
 	btnTask3->Enabled = false;
-	array<sum ^> ^temp = gcnew array<sum ^>(primes[primes->Length - 1] / 2 - 1);
-	int l = 0, m = temp->Length / 100 + 1;
+	FileStream ^output = gcnew FileStream("sum.txt", FileMode::Create);
+	StreamWriter ^writer = gcnew StreamWriter(output);
+	String ^str = "";
+	int l = 0, m = (primes[primes->Length - 1] / 2 - 1) / 100 + 1;
 	pbRun->Value = 0;
 	double start = 0.0, time = 0.0;
 	start = clock();
 	for (int i = 4; i < primes[primes->Length - 1] + 1; i += 2) {
 		for (int j = 0; j < count; j++) {
 			if (a[i - primes[j]]) {
-				temp[l] = gcnew sum;
-				temp[l]->i = i;
-				temp[l]->j = primes[j];
-				temp[l]->k = i - primes[j];
+				str = i.ToString() + " = " + primes[j].ToString() + " + " + (i - primes[j]).ToString();
+				writer->WriteLine(str);
 				if (l % m == 0) {
 					pbRun->Value++;
 				}
@@ -109,16 +105,6 @@ Void MainForm::Sum()
 	time = clock() - start;
 	MessageBox::Show("Время выполнения: " + time.ToString() + " мс");
 	pbRun->Value = 0;
-	FileStream ^output = gcnew FileStream("sum.txt", FileMode::Create);
-	StreamWriter ^writer = gcnew StreamWriter(output);
-	String ^str = "";
-	for (int i = 0; i < temp->Length; i++) {
-		str = temp[i]->i.ToString() + " = " + temp[i]->j.ToString() + " + " + temp[i]->k.ToString();
-		writer->WriteLine(str);
-		if (i % m == 0) {
-			pbRun->Value++;
-		}
-	}
 	writer->Close();
 	output->Close();
 	pbRun->Value = 0;
